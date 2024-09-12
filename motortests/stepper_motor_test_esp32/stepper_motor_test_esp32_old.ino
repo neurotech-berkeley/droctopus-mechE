@@ -25,9 +25,9 @@ DM332T important specs:
 */
 
 //MOTOR PINS
-#define DIR 10 // set direction pin        // TODO: unused in current test, test later
-#define PUL1 9 // Motor 1 PWM
-#define PUL2 25 // Motor 2 PWM              // TODO: unused in current test, test later
+#define DIR 13 // set direction pin
+#define PUL1 8 // Motor 1 PWM
+#define PUL2 25 // Motor 2 PWM 
 
 //POT PINS (CHANGE)
 #define POT1X 14 
@@ -46,8 +46,8 @@ int freq2 = 300;
 // define more frequencies here
 
 // Define timers
-// hw_timer_t * timer0 = NULL;                                       // TODO: unused in current test, check what it's used for later
-// portMUX_TYPE timerMux1 = portMUX_INITIALIZER_UNLOCKED;            // TODO: unused in current test, check what it's used for later
+hw_timer_t * timer0 = NULL;
+portMUX_TYPE timerMux1 = portMUX_INITIALIZER_UNLOCKED;
 
 
 
@@ -67,13 +67,12 @@ void setup() {
   Serial.begin(115200);
 
   pinMode(DIR, OUTPUT); // configure DIR pin as out
-  pinMode(PUL1, OUTPUT);
 
   //set up PWM channels
-  // ledcSetup(ledChannel_1, freq1, 8);
-  // ledcSetup(ledChannel_2, freq2, 8);
-  // ledcAttachPin(PUL1, ledChannel_1);
-  // ledcAttachPin(PUL2, ledChannel_2);
+  ledcSetup(ledChannel_1, freq1, 8);
+  ledcSetup(ledChannel_2, freq2, 8);
+  ledcAttach(PUL1, ledChannel_1);
+  ledcAttachPin(PUL2, ledChannel_2);
 
   // Write direction (binary input, drive to either HIGH or LOW)
   digitalWrite(DIR, HIGH);
@@ -106,13 +105,12 @@ void loop() {
   */
 
   // control loop/state machine
-  switch (state) {
+  switch (state){
     case 1:
       // DO STUFF
       //motor1on(); // change
-      // ledcWrite(ledChannel_1, 20);
-      // printMotorData(ledChannel_1, ppr1, true); // print motor 1 state for debugging
-      analogWrite(PUL1, ppr1);
+      ledcWrite(ledChannel_1, 20);
+      printMotorData(ledChannel_1, ppr1, true); // print motor 1 state for debugging
       delay(2000);
       // update <state> if needed
       /*
@@ -121,8 +119,7 @@ void loop() {
       }
       */
       break;
-    // case 2: 
-    /*
+    case 2: 
       // DO STUFF
       motor1off(); // change
       // update <state> if needed
@@ -132,7 +129,6 @@ void loop() {
       }
       break;
     //include other cases as per state machine
-    */
   }
 
   x = x + 1;
@@ -140,8 +136,6 @@ void loop() {
   //printMotorData(ledChannel_1, ppr1, true); // print motor 1 state for debugging
 
 }
-
-/*
 
 //////////////////////////////////////////////////////////////////////////////////
 // state/helper functions
@@ -168,7 +162,7 @@ void motor2off(){
 bool CheckForButtonPress(){
   if()
 }
-
+*/
 void printMotorData(const int ledcChannel, const int ppr, bool on){ // print output of motor for debugging purposes
   readFreq = ledcReadFreq(ledcChannel);
   if (on){ // format ex: "Motor 1 speed: 2 rps"
@@ -185,5 +179,5 @@ void printMotorData(const int ledcChannel, const int ppr, bool on){ // print out
   }
 }
 // ... include other motoroff() functions
-*/
+
 
